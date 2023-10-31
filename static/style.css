@@ -1,0 +1,23 @@
+body, span, input {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  background-color: black;
+  font-family: Arial, Helvetica;
+}
+ul {
+  list-style-type: none;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+input {
+  width: 80%;
+  background-color: black;
+  color: white;
+  border: 0;
+  outline: 0;
+}
+input:focus {
+  outline: 0;
+}
