@@ -6,8 +6,9 @@ function load() {
       run: () => {
          let { add, remove } = module;
 
-         add("@games/spin");
-         remove("@games/setup");
+         add("@games/spin", () => {
+remove("@games/setup");
+});
       }
    });
 }

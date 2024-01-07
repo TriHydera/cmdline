@@ -4,6 +4,22 @@ function load() {
 
    vars.set("version", "1.0")
 
+create({
+      tag: "help",
+      help: "help",
+      category: "Core",
+      aliases: ["?"],
+      run: () => {
+action.echo("\n[ Avilable Commands ]\n", { color: "lightgrey" });
+      $.each(data.cmds, cmd => {
+         cmd = data.cmds[cmd];
+         if (!cmd.hidden) {
+            action.echo(`${utils.color(cmd.tag, "pink")} | ${utils.color(cmd.help.replace("%tag%", cmd.tag), "green")} | ${utils.color(cmd.category, "red")}`);
+         }
+      })
+}
+   });
+
    create({
       tag: "echo",
       help: "echo [message]",
@@ -44,7 +60,7 @@ function load() {
 
             case "list":
             default:
-               echo("\n[ Imported Modules ]\n", { color: "blue" });
+               echo("\n[ Imported Modules ]\n", { color: "lightgrey" });
                $.each(data.modules, e => {
                   echo(`- ${utils.color(data.modules[e], "yellow")}`);
                });
@@ -66,14 +82,6 @@ function load() {
            action.echo(Object.keys(data.vars).join(", "));
          }
       }
-   });
-
-   create({
-      tag: "help",
-      help: "help",
-      category: "Core",
-      aliases: ["?"],
-      run: help
    });
 }
 

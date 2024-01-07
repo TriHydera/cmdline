@@ -30,15 +30,17 @@ const vars = {
 /* command api */
 const cmd = {
    create: (obj = {}) => {
+	let color = "lightblue"
+	
       id++;
       obj.id = id;
       data.cmds[obj.tag] = obj;
-      vars.get("debug") >= 2 ? action.echo(`${utils.color(`[Command]`, "blue")} ${obj.tag} registered`, "green") : "";
+      vars.get("debug") >= 2 ? action.echo(`${utils.color(`[Command]`, color)} ${obj.tag} registered`, "green") : "";
       if (obj.aliases) {
          obj.aliases.forEach(tag => {
             id++;
             data.cmds[tag] = { tag, run: data.cmds[obj.tag].run, hidden: true, parent: obj.tag, id: `${obj.uid}${id}` }
-            vars.get("debug") >= 2 ? action.echo(`${utils.color(`[Command]`, "blue")} ${tag} => ${obj.tag} registered`, "green") : "";
+            vars.get("debug") >= 2 ? action.echo(`${utils.color(`[Command]`, color)} ${tag} => ${obj.tag} registered`, "green") : "";
          })
       }
    },
@@ -49,7 +51,7 @@ const cmd = {
    },
    run: (tag, args) => {
       if (data.cmds[tag] === undefined) {
-         action.echo(`Command "${tag}" was not found`, { color: "red" });
+         action.echo(`"${tag}" not found`, { color: "red" });
          return;
       }
       data.cmds[tag].run(args);
@@ -76,15 +78,6 @@ const action = {
       $("#prompt").text(prompt + ":");
    },
    clear: () => { $("#feed").html("") },
-   help: () => {
-      action.echo("\n[ Avilable Commands ]\n", { color: "blue" });
-      $.each(data.cmds, cmd => {
-         cmd = data.cmds[cmd];
-         if (!cmd.hidden) {
-            action.echo(`${utils.color(cmd.tag, "pink")} | ${utils.color(cmd.help, "green")} | ${utils.color(cmd.category, "red")} | ${utils.color(cmd.id, "orange")}`);
-         }
-      });
-   },
    prefetch: (host) => {
       $("head").append(`<link rel="dns-prefetch" href="${host}" /><link rel="prefetch" href="${host}" />`);
       vars.get("debug") >= 3 ? action.echo(`${utils.color(`[Prefetch]`, "blue")} ${host}`, "green") : "";
@@ -95,21 +88,23 @@ const action = {
 /* module api */
 const module = {
    add: (module, callback = () => {}) => {
+	let color = "lightblue"
+	
       if (data.modules.indexOf(module) < 0) {
          $.get(`modules/${module}.js`, (script) => {
                $("head").append(`<script>${script}</script>`);
                addToArray(data.modules, module);
-               vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, "blue")} ${module} loaded`, "green") : "";
+               vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, color)} ${module} loaded`, "green") : "";
                load();
                callback(true);
             })
             .fail(function() {
-               vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, "blue")} ${module} not found`, "red") : "";
+               vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, color)} ${module} not found`, "red") : "";
             });
       }
    },
    remove: (module) => {
-      vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, "blue")} ${module} removed`, "green") : "";
+      vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, color)} ${module} removed`, "green") : "";
    }
 }
 
@@ -129,7 +124,7 @@ $(document).ready(() => {
             vars.set("_prompt", null)
             return;
          }
-         action.echo(`${utils.color("> ", "blue")} ${val}`);
+         action.echo(`${utils.color("> ", "lightgrey")} ${val}`);
          cmd.run(vals.splice(0, 1)[0], vals);
       }
       if (e.keyCode == 38) {

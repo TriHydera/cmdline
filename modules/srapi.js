@@ -1,15 +1,9 @@
 function load() {
   module.add("@cmd/request");
   
-   let {
-      color
-   } = utils;
-   let {
-      echo
-   } = action;
-   let {
-      create
-   } = cmd;
+   let { color } = utils;
+   let { echo } = action;
+   let { create } = cmd;
 
    let config = {
       animals: ["bird", "cat", "dog", "fox", "koala", "panda"],

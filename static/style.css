@@ -1,9 +1,11 @@
-body, span, input {
-  font-size: 20px;
-  font-weight: bold;
+html,
+body, 
+	input {
+	font-size: 15px;
+	font-weight: bold;
   color: white;
-  background-color: black;
-  font-family: Arial, Helvetica;
+  font-family: sans-;
+	background-color: rgba(40, 42, 54, 1) !important;
 }
 ul {
   list-style-type: none;
@@ -12,8 +14,7 @@ ul {
   padding: 0;
 }
 input {
-  width: 80%;
-  background-color: black;
+  width: 90%;
   color: white;
   border: 0;
   outline: 0;
