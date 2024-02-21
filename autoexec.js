@@ -17,7 +17,4 @@
 add("@cmd/styler");
 add("rainbow")
 add("srapi")
-add("@games/setup", () => {
-cmd.run("games-setup", "")
-})
   })
