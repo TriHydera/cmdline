@@ -1,9 +1,8 @@
-  let { add } = module
-  let { color } = utils
+   let { color } = utils
 
   vars.set("debug", 0)
   
-  add("@cmd/core", () => {
+  module.add("@cmd/core", () => {
 
     vars.set("bar", "===================================");
 
@@ -14,7 +13,9 @@
 | Version: ${color("%version%", "lightblue")}
 %bar%`)
 
-add("@cmd/styler");
-add("rainbow")
-add("srapi")
+module.add("@cmd/storage-api");
+module.add("@cmd/printer");
+module.add("@cmd/styler");
+module.add("rainbow")
+module.add("srapi")
   })

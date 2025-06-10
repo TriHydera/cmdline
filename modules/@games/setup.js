@@ -5,10 +5,10 @@ function load() {
       category: "Setup",
       run: () => {
          let { add, remove } = module;
-
+         
          add("@games/spin", () => {
-remove("@games/setup");
-});
+            remove("@games/setup");
+         });
       }
    });
 }

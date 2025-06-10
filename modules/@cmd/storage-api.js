@@ -7,11 +7,11 @@ function load() {
   vars.set("storage_used_raw", t/1024);
   
   action.storage = {
-    setValue: (key, value) => {
+    set: (key, value) => {
         local[key] = value || null;
-        ls.setItem("userdata", JSON.stringify(local));
+        localStorage.setItem("userdata", JSON.stringify(local));
       },
-      getValue: (key) => {
+      get: (key) => {
         return local[key] || null;
       }
   }

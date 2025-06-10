@@ -51,7 +51,7 @@ const cmd = {
    },
    run: (tag, args) => {
       if (data.cmds[tag] === undefined) {
-         action.echo(`"${tag}" not found`, { color: "red" });
+         action.echo(`${tag}" not found`, { color: "red" });
          return;
       }
       data.cmds[tag].run(args);

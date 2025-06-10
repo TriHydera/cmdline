@@ -1,14 +1,12 @@
 function load(){
-  let { set } = vars;
-  
   module.add("@cmd/storage-api");
   
   const currency = action.storage.getValue("currency") || {
     balance: 0
   }
   
-  set("currency_prefix", "$");
-  set("currency_balance", currency.balance);
+  vars.set("currency_prefix", "$");
+  vars.set("currency_balance", currency.balance);
   
   action.currency = {
     getBalance: () => {
