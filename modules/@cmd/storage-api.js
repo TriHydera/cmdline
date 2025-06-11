@@ -8,6 +8,8 @@ function load() {
   
   action.storage = {
     set: (key, value) => {
+      vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Storage]`, color)} ${key} set to ${value}`, "green") : "";
+      
         local[key] = value || null;
         localStorage.setItem("userdata", JSON.stringify(local));
       },

@@ -1,3 +1,5 @@
+// Version: 1
+
 function load(){
   module.add("@cmd/storage-api");
   

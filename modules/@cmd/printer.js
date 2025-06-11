@@ -1,3 +1,5 @@
+// Version: 1
+
 function load() {
   action.printer = file => {
     $.get( `storage/printer/${file}.txt`, function( data ) {

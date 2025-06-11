@@ -1,3 +1,5 @@
+// Version: 1
+
 function load() {
    action.add("@cmd/core");
    action.add("@cmd/apis");

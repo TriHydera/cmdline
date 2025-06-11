@@ -1,5 +1,7 @@
+// Version: 1
+
 function load() {
-  module.add("@cmd/request");
+  module.add("@cmd/request-api");
   
    let { color } = utils;
    let { echo } = action;
@@ -7,11 +9,11 @@ function load() {
 
    let config = {
       animals: ["bird", "cat", "dog", "fox", "koala", "panda"],
-      base: "https://some-random-api.ml"
+      base: "https://api.some-random-api.com"
    }
    config.facts = `${config.base}/facts`
 
-   config.help = `\n${color("[ Fact Help ]", "blue")}\n ${color("Values for [animal]:", "lightblue")}\n- ${config.animals.join("\n- ")}`;
+   config.help = `\n${color("[ Fact Help ]", "lightgray")}\n ${color("Values for [animal]:", "lightblue")}\n- ${config.animals.join("\n- ")}`;
 
    create({
       "tag": "fact",
@@ -24,7 +26,7 @@ function load() {
          } else {
             action.request(`${config.facts}/${args[0]}`,
                (data) => {
-                  echo(`${color(`\n[ Fact about ${args[0]}s ]`, "blue")}\n${color(data.fact, "lightblue")}`);
+                  echo(`${color(`\n[ Fact about ${args[0]}s ]`, "lightgray")}\n${color(data.fact, "lightblue")}`);
                }
             );
          }

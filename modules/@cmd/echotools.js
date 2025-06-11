@@ -1,3 +1,5 @@
+// Version: 1
+
 function load() {
   action.echotools = {
     click: (text, run = () => { }) => {

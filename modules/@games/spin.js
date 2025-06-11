@@ -1,3 +1,5 @@
+// Version: 1
+
 function load() {
    let { rand } = utils;
    let { set } = vars;

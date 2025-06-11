@@ -1,3 +1,5 @@
+// Version: 1
+
 function load() {
    cmd.create({
       tag: "games-setup",

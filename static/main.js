@@ -1,3 +1,5 @@
+// Version: 1
+
 /* variables */
 var data = { last: "", cmds: {}, modules: [], vars: { debug: 0 } }
 var id = 0
@@ -51,7 +53,7 @@ const cmd = {
    },
    run: (tag, args) => {
       if (data.cmds[tag] === undefined) {
-         action.echo(`${tag}" not found`, { color: "red" });
+         action.echo(`Command ${tag} not found`, { color: "orange" });
          return;
       }
       data.cmds[tag].run(args);

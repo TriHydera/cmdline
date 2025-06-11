@@ -1,32 +1,34 @@
+// Version: 1
+
 function load() {
    let { create } = cmd;
    let { echo, help, clear } = action;
-
+   
    vars.set("version", "1.0")
-
-create({
+   
+   create({
       tag: "help",
       help: "help",
       category: "Core",
       aliases: ["?"],
       run: () => {
-action.echo("\n[ Avilable Commands ]\n", { color: "lightgrey" });
-      $.each(data.cmds, cmd => {
-         cmd = data.cmds[cmd];
-         if (!cmd.hidden) {
-            action.echo(`${utils.color(cmd.tag, "pink")} | ${utils.color(cmd.help.replace("%tag%", cmd.tag), "green")} | ${utils.color(cmd.category, "red")}`);
-         }
-      })
-}
+         action.echo("\n[ Avilable Commands ]\n", { color: "lightgrey" });
+         $.each(data.cmds, cmd => {
+            cmd = data.cmds[cmd];
+            if (!cmd.hidden) {
+               action.echo(`${utils.color(cmd.tag, "pink")} | ${utils.color(cmd.help.replace("%tag%", cmd.tag), "green")} | ${utils.color(cmd.category, "red")}`);
+            }
+         })
+      }
    });
-
+   
    create({
       tag: "echo",
       help: "echo [message]",
       category: "Core",
       run: args => { echo(args.join(" ") || args) }
    });
-
+   
    create({
       tag: "clear",
       help: "clear",
@@ -34,30 +36,30 @@ action.echo("\n[ Avilable Commands ]\n", { color: "lightgrey" });
       aliases: ["cls"],
       run: clear
    });
-
+   
    create({
       tag: "mod",
       help: "mod [add|remove|list] [module]",
       category: "Core",
       aliases: [],
       run: args => {
-        vars.set("not_avilable", "This feature is not avilable yet!")
-
+         vars.set("not_avilable", "This feature is not avilable yet!")
+         
          switch (args[0]) {
             case "add":
                module.add(args[1], status => {
-               if(status){
-                  action.echo(`Module: ${args[1]} was imported`, { color: "orange" })
-               }
+                  if (status) {
+                     action.echo(`Module: ${args[1]} was imported`, { color: "orange" })
+                  }
                });
                break;
-
+               
             case "remove":
                echo(`%bar%
          Remove: %not_avilable%
          %bar%`, { color: "orange" });
                break;
-
+               
             case "list":
             default:
                echo("\n[ Imported Modules ]\n", { color: "lightgrey" });
@@ -67,22 +69,22 @@ action.echo("\n[ Avilable Commands ]\n", { color: "lightgrey" });
                break;
          }
       }
-
+      
    });
-
+   
    create({
       tag: "set",
       help: "set [key] [value]",
       category: "Core",
       run: args => {
-         if(args[0] && args[1]){
+         if (args[0] && args[1]) {
             vars.set(args[0], args[1]);
             action.echo(`Variable: "${args[0]}" set to "${args[1]}"`, { color: "orange" });
          } else {
-           action.echo(Object.keys(data.vars).join(", "));
+            action.echo(Object.keys(data.vars).join(", "));
          }
       }
    });
 }
 
-function unload() { }
+function unload() {}
