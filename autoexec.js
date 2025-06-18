@@ -1,6 +1,6 @@
    let { color } = utils
    
-   vars.set("debug", 0)
+   vars.set("debug", 0);
    
    module.add("@cmd/core", () => {
      
@@ -11,10 +11,9 @@
 | Type ${color("\"help\"", "lightblue")} to get a
 | list of commands
 | Version: ${color("%version%", "lightblue")}
-%bar%`)
-     
-     module.add("@cmd/storage-api");
-     module.add("@cmd/printer");
-     module.add("@cmd/styler");
+%bar%`);
+    
+     module.add("@cmd");
      module.add("srapi");
+     module.add("@games/spin");
    })

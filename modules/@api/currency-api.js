@@ -1,9 +1,14 @@
 // Version: 1
 
-function load(){
-  module.add("@cmd/storage-api");
-  
-  const currency = action.storage.getValue("currency") || {
+var meta = {
+  name: "@api/currency-api",
+  ver: "1",
+  deps: ["@cmd/storage-api"]
+}
+
+function load() {
+  module.add("@cmd/storage-api", () => {
+  const currency = action.storage.get("currency") || {
     balance: 0
   }
   
@@ -24,4 +29,5 @@ function load(){
       currency.balance = amount;
     }
   }
+  });
 }

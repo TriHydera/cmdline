@@ -1,7 +1,13 @@
 // Version: 1
 
-function load(){
-  module.add("@cmd/currency-api");
+function load() {
+  const meta = {
+    name: "wallet",
+    ver: "1",
+    deps: ["@api/currency-api"]
+  }
+  
+  module.add("@api/currency-api");
   
   cmd.create({
     tag: "wallet",

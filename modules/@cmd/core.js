@@ -1,10 +1,17 @@
-// Version: 1
+// Version: 2
+
+var meta = {
+   name: "@cmd/core",
+   ver: "2",
+   deps: []
+}
+
 
 function load() {
    let { create } = cmd;
    let { echo, help, clear } = action;
    
-   vars.set("version", "1.0")
+   vars.set("version", "1.1")
    
    create({
       tag: "help",
@@ -16,7 +23,7 @@ function load() {
          $.each(data.cmds, cmd => {
             cmd = data.cmds[cmd];
             if (!cmd.hidden) {
-               action.echo(`${utils.color(cmd.tag, "pink")} | ${utils.color(cmd.help.replace("%tag%", cmd.tag), "green")} | ${utils.color(cmd.category, "red")}`);
+               action.echo(`${utils.color(cmd.tag, "pink")} | ${utils.color(cmd.help.replace("%tag%", cmd.tag), "green")} | ${utils.color(cmd.category, "lightblue")}`);
             }
          })
       }
@@ -39,7 +46,7 @@ function load() {
    
    create({
       tag: "mod",
-      help: "mod [add|remove|list] [module]",
+      help: "mod [add|list|deps] [module]",
       category: "Core",
       aliases: [],
       run: args => {
@@ -47,10 +54,18 @@ function load() {
          
          switch (args[0]) {
             case "add":
-               module.add(args[1], status => {
+               module.add(args[1], (status, moduleName) => {
                   if (status) {
-                     action.echo(`Module: ${args[1]} was imported`, { color: "orange" })
+                     action.echo(`Module: ${moduleName} was imported`, { color: "orange" })
                   }
+               });
+               break;
+               
+               
+            case "deps":
+               action.echo(`\n[ Deps for ${args[1]} ]\n`, { color: "lightgrey" });
+               module.listDeps(args[1]).forEach(moduleName => {
+                  echo(`- ${utils.color(moduleName, "yellow")}`);
                });
                break;
                
@@ -63,13 +78,12 @@ function load() {
             case "list":
             default:
                echo("\n[ Imported Modules ]\n", { color: "lightgrey" });
-               $.each(data.modules, e => {
-                  echo(`- ${utils.color(data.modules[e], "yellow")}`);
+               module.list().forEach(moduleName => {
+                  echo(`- ${utils.color(moduleName, "yellow")}`);
                });
                break;
          }
       }
-      
    });
    
    create({
@@ -85,6 +99,16 @@ function load() {
          }
       }
    });
+   
+   create({
+      tag: "uuid",
+      help: "uuid",
+      category: "Core",
+      run: (args) => {
+         action.echo(`\n${utils.color("[ UUID Generator ]", "lightgray")}
+         ${crypto.randomUUID()}`);
+      }
+   })
 }
 
 function unload() {}

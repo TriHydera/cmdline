@@ -1,22 +1,31 @@
-// Version: 1
+// Version: 2
+
+var meta = {
+   name: "@games/spin",
+   ver: "2",
+   deps: []
+}
 
 function load() {
-   let { rand } = utils;
-   let { set } = vars;
-
+   let { randNumber } = utils;
+   let { set: setVar } = vars;
+   
    cmd.create({
       tag: "spin",
       help: "%tag%",
       category: "Games",
       run: () => {
-         set("n1", rand(1, 9));
-         set("n2", rand(1, 9));
-         set("n3", rand(1, 9));
-
-         action.echo(`%bar%
-      |------| |------| |------|
-      |- (%n1%) -| |- (%n2%) '|- (%n3%) -|
-      |------| |------| |------|
+         setVar("space", "                                  ". replace(/ /g, '\xa0'))
+         setVar("space2", "                     ". replace(/ /g, '\xa0'))
+         setVar("n1", randNumber(1, 9));
+         setVar("n2", randNumber(1, 9));
+         setVar("n3", randNumber(1, 9));
+         
+         action.echo(`\n%bar%
+        %space%${utils.color("[ Spin ]", "lightgray")}
+      %space2%|------| |------| |------|
+      %space2%|- (%n1%) -| |- (%n2%) |- (%n3%) -|
+      %space2%|------| |------| |------|
       %bar%`, { asText: true });
       }
    });

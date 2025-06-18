@@ -1,22 +1,28 @@
-// Version: 1
+// Version: 2
+// Added action.clickable
 
 /* variables */
-var data = { last: "", cmds: {}, modules: [], vars: { debug: 0 } }
+var data = { last: "", cmds: {}, moduleDeps: {}, moduleList: [], moduleUrls: [], vars: { debug: 0 } }
 var id = 0
 
 /* utils */
 const utils = {
    color: (text, color) => {
       return `<span style="color: ${color};">${text}</span>`;
-   }
-}
-
-/* functions */
-function addToArray(array = [], value) {
+   },
+   addToArray: (array = [], value) => {
    array.push(value)
-}
-function setObjectValue(object = {}, key, value) {
+   },
+   setObjectValue: (object = {}, key, value) => {
    object[key] = value;
+},
+ randNumber: (min, max) => {
+    if (min >= max) {
+      new Error("Min needs to be less then Max");
+    }
+    
+  return Math.floor(Math.random() * (max - min) ) + min;
+}
 }
 
 /* variable api */
@@ -31,9 +37,14 @@ const vars = {
 
 /* command api */
 const cmd = {
-   create: (obj = {}) => {
-	let color = "lightblue"
-	
+   create: (obj = {
+      tag: "",
+      help: "",
+      category: "",
+      run: (args) => {}
+   }) => {
+      let color = "lightblue"
+      
       id++;
       obj.id = id;
       data.cmds[obj.tag] = obj;
@@ -64,16 +75,21 @@ const cmd = {
 /* action api */
 const action = {
    echo: (text, opts = {}) => {
-      if(!opts.asRaw){
-      Object.keys(data.vars).forEach(key => {
-         text = text.replace(new RegExp(`%${key}%`, "g"), data.vars[key]);
-      });
-   }
+      if (!opts.asRaw) {
+         Object.keys(data.vars).forEach(key => {
+            text = text.replace(new RegExp(`%${key}%`, "g"), data.vars[key]);
+         });
+      }
       text = text.replace(/\n/g, `<br />`);
       let style = `color: ${opts.color}`;
-
+      
       id++;
       $("#feed").append(`<li id="${id}" style="${style}">${text}</li>`)
+   },
+   clickable: (text, run = () => {}) => {
+      elem = $(`<span>${text}</span>`);
+      elem.click(run);
+      return elem.prop("outerHTML");
    },
    prompt: (prompt, callback) => {
       vars.set("_prompt", { callback });
@@ -86,24 +102,36 @@ const action = {
    }
 }
 
-
-/* module api */
 const module = {
    add: (module, callback = () => {}) => {
-	let color = "lightblue"
-	
-      if (data.modules.indexOf(module) < 0) {
-         $.get(`modules/${module}.js`, (script) => {
+      let color = "lightblue"
+      const isHttp = new RegExp("http");
+      const moduleUrl = isHttp.test(module) ? module : `modules/${module}.js`;
+      
+      if (data.moduleUrls.indexOf(moduleUrl) > -1) {
+         return;
+      }
+      
+         $.get(moduleUrl, (script) => {
+               const { name, deps } = meta;
+               
                $("head").append(`<script>${script}</script>`);
-               addToArray(data.modules, module);
-               vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, color)} ${module} loaded`, "green") : "";
+               utils.setObjectValue(data.moduleDeps, name, deps);
+               utils.addToArray(data.moduleList, name);
+               utils.addToArray(data.moduleUrls, moduleUrl);
+               vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, color)} ${name} loaded`, "green") : "";
                load();
-               callback(true);
+               callback(true, name);
             })
             .fail(function() {
-               vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, color)} ${module} not found`, "red") : "";
+               vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, color)} ${module} not found`, "orange") : "";
             });
-      }
+   },
+   list: () => {
+      return new Set(data.moduleList);
+   },
+   listDeps: (module) => {
+      return data.moduleDeps[module] || [];
    },
    remove: (module) => {
       vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, color)} ${module} removed`, "green") : "";
@@ -118,14 +146,16 @@ $(document).ready(() => {
          let val = $("#input").val();
          let vals = val.split(" ");
          data.last = val;
+         
          $("#input").val("");
-
+         
          if (vars.get("_prompt")) {
             $("#prompt").text("$");
             vars.get("_prompt").callback(val);
             vars.set("_prompt", null)
             return;
          }
+         
          action.echo(`${utils.color("> ", "lightgrey")} ${val}`);
          cmd.run(vals.splice(0, 1)[0], vals);
       }

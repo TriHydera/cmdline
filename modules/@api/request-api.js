@@ -1,11 +1,17 @@
 // Version: 1 
- 
- function load(){
+
+var meta = {
+  name: "@api/request-api",
+  ver: "1",
+   deps: []
+}
+
+function load() {
   action.request = (url, callback) => {
     const hosts = action.storage.get("allowedHosts") || ["localhost", "127.0.0.1"];
     let domain = (new URL(url)).hostname;
     
-    if(hosts.indexOf(domain) > 0){
+    if (hosts.indexOf(domain) > 0) {
       $.getJSON(url, callback);
     } else {
       action.prompt(`Allow access to "${domain}"? (y/yes/n/no)`, input => {
@@ -15,7 +21,7 @@
             action.storage.set("allowedHosts", hosts)
             $.getJSON(url, callback);
             break;
-        
+            
           default:
             break;
         }
