@@ -1,21 +1,20 @@
-// Version: 2
+// Version: 1.2
 
 var meta = {
    name: "@cmd/core",
-   ver: "2",
+   ver: "1.2",
    deps: []
 }
 
-
 function load() {
    let { create } = cmd;
-   let { echo, help, clear } = action;
+   let { echo, help, clear } = core.action;
    
-   vars.set("version", "1.1")
+   vars.set("version", "1.2")
    
    create({
       tag: "help",
-      help: "help",
+      help: "%tag%",
       category: "Core",
       aliases: ["?"],
       run: () => {
@@ -31,14 +30,14 @@ function load() {
    
    create({
       tag: "echo",
-      help: "echo [message]",
+      help: "%tag% [message]",
       category: "Core",
       run: args => { echo(args.join(" ") || args) }
    });
    
    create({
       tag: "clear",
-      help: "clear",
+      help: "%tag%",
       category: "Core",
       aliases: ["cls"],
       run: clear
@@ -46,7 +45,7 @@ function load() {
    
    create({
       tag: "mod",
-      help: "mod [add|list|deps] [module]",
+      help: "%tag% [add|list|deps] [module]",
       category: "Core",
       aliases: [],
       run: args => {
@@ -88,7 +87,7 @@ function load() {
    
    create({
       tag: "set",
-      help: "set [key] [value]",
+      help: "%tag% [key] [value]",
       category: "Core",
       run: args => {
          if (args[0] && args[1]) {
@@ -102,13 +101,34 @@ function load() {
    
    create({
       tag: "uuid",
-      help: "uuid",
+      help: "%tag%",
       category: "Core",
       run: (args) => {
          action.echo(`\n${utils.color("[ UUID Generator ]", "lightgray")}
          ${crypto.randomUUID()}`);
       }
    })
+   
+   cmd.create({
+    tag: "rand",
+    aliases: ["ran"],
+    help: "%tag% [min] [max]",
+    category: "Core",
+    run: (args) => {
+      if (!args[0] || !args[1] || args[0] >= args[1]) {
+        action.echo(utils.color("Min needs to be less then Max", "orange"))
+        
+        return;
+      }
+      
+      const [min, max] = args;
+      
+      action.echo(`\n%bar%
+      ${utils.color("[ Rand Number ]", "lightgray")}
+      Here's a number between ${min} and ${max}: ${utils.color(utils.randNumber(Number(min), Number(max)), "lightgray")}
+      %bar%`)
+    }
+  })
 }
 
 function unload() {}

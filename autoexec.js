@@ -1,19 +1,19 @@
+(() => {
    let { color } = utils
    
-   vars.set("debug", 0);
+   core.vars.set("debug", 0);
+   core.storage.updateStats();
    
-   module.add("@cmd/core", () => {
+   core.module.add("@cmd/core", () => {
+     core.vars.set("bar", "===================================");
      
-     vars.set("bar", "===================================");
-     
-     action.echo(`%bar%
+     core.action.echo(`%bar%
 | Welcome to ${color("command line", "lightblue")}!
 | Type ${color("\"help\"", "lightblue")} to get a
 | list of commands
 | Version: ${color("%version%", "lightblue")}
 %bar%`);
     
-     module.add("@cmd");
-     module.add("srapi");
-     module.add("@games/spin");
+    ["@api/currency-api", "@cmd/printer", "srapi", "@games/spin"].forEach(item => core.module.add(item))
    })
+})()

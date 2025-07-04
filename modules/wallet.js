@@ -1,9 +1,9 @@
-// Version: 1
+// Version: 1.1
 
 function load() {
   const meta = {
     name: "wallet",
-    ver: "1",
+    ver: "1.1",
     deps: ["@api/currency-api"]
   }
   
@@ -15,7 +15,7 @@ function load() {
     aliases: ["bal", "balance"],
     run: args => {
       action.echo(`%bar%
-      Your personal wallet
+      ${utils.color("[ Your personal wallet ]", "lightgray")}
       
       You have %currency_prefix%%currency_balance% in your wallet!
       %bar%`, { color: "lightblue" })

@@ -1,5 +1,4 @@
 // Version: 2
-// Added action.clickable
 
 /* variables */
 var data = { last: "", cmds: {}, moduleDeps: {}, moduleList: [], moduleUrls: [], vars: { debug: 0 } }
@@ -22,6 +21,15 @@ const utils = {
     }
     
   return Math.floor(Math.random() * (max - min) ) + min;
+},
+localStorageSize: () => { // https://gist.github.com/tkambler/71050d80f1a57ea83c18?permalink_comment_id=4116847#gistcomment-4116847
+   let _lsTotal = 0,_xLen, _x;
+   for (_x in localStorage) {
+   if (!localStorage.hasOwnProperty(_x)) continue;
+       _xLen = (localStorage[_x].length + _x.length) * 2;
+       _lsTotal += _xLen;
+   }
+ return  {kb: (_lsTotal / 1024).toFixed(2), raw: (_lsTotal).toFixed(2)};
 }
 }
 
@@ -48,12 +56,12 @@ const cmd = {
       id++;
       obj.id = id;
       data.cmds[obj.tag] = obj;
-      vars.get("debug") >= 2 ? action.echo(`${utils.color(`[Command]`, color)} ${obj.tag} registered`, "green") : "";
+      vars.get("debug") >= 2 ? core.action.echo(`${utils.color(`[Command]`, color)} ${obj.tag} registered`, "green") : "";
       if (obj.aliases) {
          obj.aliases.forEach(tag => {
             id++;
             data.cmds[tag] = { tag, run: data.cmds[obj.tag].run, hidden: true, parent: obj.tag, id: `${obj.uid}${id}` }
-            vars.get("debug") >= 2 ? action.echo(`${utils.color(`[Command]`, color)} ${tag} => ${obj.tag} registered`, "green") : "";
+            vars.get("debug") >= 2 ? core.action.echo(`${utils.color(`[Command]`, color)} ${tag} => ${obj.tag} registered`, "green") : "";
          })
       }
    },
@@ -64,7 +72,7 @@ const cmd = {
    },
    run: (tag, args) => {
       if (data.cmds[tag] === undefined) {
-         action.echo(`Command ${tag} not found`, { color: "orange" });
+         core.action.echo(`Command ${tag} not found`, { color: "orange" });
          return;
       }
       data.cmds[tag].run(args);
@@ -98,10 +106,11 @@ const action = {
    clear: () => { $("#feed").html("") },
    prefetch: (host) => {
       $("head").append(`<link rel="dns-prefetch" href="${host}" /><link rel="prefetch" href="${host}" />`);
-      vars.get("debug") >= 3 ? action.echo(`${utils.color(`[Prefetch]`, "blue")} ${host}`, "green") : "";
+      vars.get("debug") >= 3 ? core.action.echo(`${utils.color(`[Prefetch]`, "blue")} ${host}`, "green") : "";
    }
 }
 
+/* module api */
 const module = {
    add: (module, callback = () => {}) => {
       let color = "lightblue"
@@ -119,12 +128,12 @@ const module = {
                utils.setObjectValue(data.moduleDeps, name, deps);
                utils.addToArray(data.moduleList, name);
                utils.addToArray(data.moduleUrls, moduleUrl);
-               vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, color)} ${name} loaded`, "green") : "";
+               vars.get("debug") >= 1 ? core.action.echo(`${utils.color(`[Module]`, color)} ${name} loaded`, "green") : "";
                load();
                callback(true, name);
             })
             .fail(function() {
-               vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, color)} ${module} not found`, "orange") : "";
+               vars.get("debug") >= 1 ? core.action.echo(`${utils.color(`[Module]`, color)} ${module} not found`, "orange") : "";
             });
    },
    list: () => {
@@ -134,9 +143,62 @@ const module = {
       return data.moduleDeps[module] || [];
    },
    remove: (module) => {
-      vars.get("debug") >= 1 ? action.echo(`${utils.color(`[Module]`, color)} ${module} removed`, "green") : "";
+      vars.get("debug") >= 1 ? core.action.echo(`${utils.color(`[Module]`, color)} ${module} removed`, "green") : "";
    }
 }
+
+/* storage api */
+const storage = {
+    updateStats: () => {
+  let local = JSON.parse(localStorage.getItem("userdata")) || {}
+  const lsSize = utils.localStorageSize()
+  
+  vars.set("storage_used", `${lsSize. kb}KB`);
+  vars.set("storage_used_raw", lsSize.raw);
+    },
+    setItem: (key, value) => {
+      let local = JSON.parse(localStorage.getItem("userdata")) || {}
+      
+      vars.get("debug") >= 1 ? core.action.echo(`${utils.color(`[Storage]`, color)} ${key} set to ${value}`, "green") : "";
+      
+      local[key] = value || null;
+      localStorage.setItem("userdata", JSON.stringify(local));
+    },
+    getItem: (key) => {
+      let local = JSON.parse(localStorage.getItem("userdata")) || {}
+      
+      return local[key] || null;
+    }
+  }
+
+/* request api */
+const request = {
+   send: (url, callback) => {
+    const hosts = core.storage.getItem("allowedHosts") || ["localhost", "127.0.0.1"];
+    let domain = (new URL(url)).hostname;
+    
+    if (hosts.indexOf(domain) > 0) {
+      $.getJSON(url, callback);
+    } else {
+      action.prompt(`Allow access to "${domain}"? (y/yes/n/no)`, input => {
+        switch (input) {
+          case "y" || "yes":
+            hosts.push(domain);
+            core.storage.setItem("allowedHosts", hosts)
+            $.getJSON(url, callback);
+            break;
+            
+          default:
+            break;
+        }
+      });
+    }
+  }
+}
+  
+  /* core and api object */
+  const core = { vars, cmd, module, action, storage, request }
+  const api = {}
 
 /* on send event */
 $(document).ready(() => {
@@ -156,7 +218,7 @@ $(document).ready(() => {
             return;
          }
          
-         action.echo(`${utils.color("> ", "lightgrey")} ${val}`);
+         core.action.echo(`${utils.color("> ", "lightgrey")} ${val}`);
          cmd.run(vals.splice(0, 1)[0], vals);
       }
       if (e.keyCode == 38) {

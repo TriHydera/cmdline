@@ -1,16 +1,15 @@
-// Version: 2
+// Version: 2.1
+
+var meta = {
+   name: "srapi",
+   ver: "2.1",
+   deps: []
+}
+
 
 function load() {
-   const meta = {
-      name: "srapi",
-      ver: "2",
-      deps: ["@api/request-api"]
-   }
-   
-   module.add("@api/request-api");
-   
    let { color } = utils;
-   let { echo, request } = action;
+   let { echo } = core.action;
    
    let config = {
       animals: ["bird", "cat", "dog", "fox", "koala", "panda"],
@@ -29,7 +28,7 @@ function load() {
          if (!config.animals.includes(args[0])) {
             echo(config.help);
          } else {
-            request(`${config.facts}/${args[0]}`,
+            core.request.send(`${config.facts}/${args[0]}`,
                (data) => {
                   echo(`${color(`\n[ Fact about ${args[0]}s ]`, "lightgray")}\n${color(data.fact, "lightblue")}`);
                }

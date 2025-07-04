@@ -1,20 +1,18 @@
-# Update 1.1
+# Update 1.2
 
 ## Dev
 
-- Added third-party module support (url import)
-- Added `rand-number` module (use `rand [min] [max]` command)
-- Added `uuid` command
-- Added deps list to `module`
+### JS
 
-- Removed `echotools` module (now `action.clickable`)
-- Removed `styler` module
+- 🌐 `jquery` is now local
 
-- Fixed `currency-api` module
-- Fixed module multi-import issue
-- Fixed `srapi` host domain
-- Fixed `spin` box formating
+### Module Merge
 
-## Commands
+- 🆕 New `core` and `api` system
+- `request` and `storage` (was `-api` modules) are now a part of `core`
+- 🆕 New LocalStorage calc using [this](https://gist.github.com/tkambler/71050d80f1a57ea83c18?permalink_comment_id=4116847#gistcomment-4116847)
 
-- Added `mod deps` command
+### Misc
+
+- ⚙️ Added colour to `wallet` title
+- ⚙️ Using %tag% on commands help

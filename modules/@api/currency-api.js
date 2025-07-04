@@ -1,21 +1,20 @@
-// Version: 1
+// Version: 1.1
 
 var meta = {
   name: "@api/currency-api",
-  ver: "1",
-  deps: ["@cmd/storage-api"]
+  ver: "1.1",
+  deps: []
 }
 
 function load() {
-  module.add("@cmd/storage-api", () => {
-  const currency = action.storage.get("currency") || {
+  const currency = core.storage.getItem("currency") || {
     balance: 0
   }
   
-  vars.set("currency_prefix", "$");
-  vars.set("currency_balance", currency.balance);
+  core.vars.set("currency_prefix", "$");
+  core.vars.set("currency_balance", currency.balance);
   
-  action.currency = {
+  api.currency = {
     getBalance: () => {
       return currency.balance;
     },
@@ -29,5 +28,4 @@ function load() {
       currency.balance = amount;
     }
   }
-  });
 }

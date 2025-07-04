@@ -1,17 +1,17 @@
-// Version: 1
+// Version: 1.1
 
 var meta = {
   name: "@cmd/printer",
-  ver: "1",
+  ver: "1.1",
    deps: []
 }
 
 function load() {
-  action.printer = (file) => {
+  api.printer = (file) => {
     $.get(`storage/printer/${file}.txt`, function(data) {
         let rows = data.split("\n");
         rows.forEach(row => {
-          action.echo(row, "", true);
+          action.echo(row.replace(/ /g, '\xa0'), "", true);
         });
       })
       .fail(() => {});
@@ -19,10 +19,10 @@ function load() {
   
   cmd.create({
     tag: "print",
-    help: "print [file]",
+    help: "%tag% [file]",
     category: "Printer",
     run: args => {
-      action.printer(args[0]);
+      api.printer(args[0]);
     }
   })
 }
