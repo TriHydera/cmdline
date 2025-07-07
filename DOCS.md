@@ -41,7 +41,7 @@ function load() {} // run on import
 |----------------------------------------------------------------------|--------------------------------------------------------------|
 | `core.vars.set(key, value)`                                         | Sets instance storage value                                   |
 | `core.vars.get(key)`                                               | Gets instance storage value                       {}            |
-{| `}core.cmd.create(obj = { tag: "", help: "", category: "", run: (args) => {} })` | Creates a command                                           |
+| `core.cmd.create(obj = { tag: "", help: "", category: "", run: (args) => {} })` | Creates a command                                           |
 | `core.cmd.remove(cmd)`                                             | Removes command from system                                   |
 | `core.cmd.run(tag, args)`                                          | Runs a command with args                                      |
 | `core.action.echo(text, opts = { color: "white", asRaw: false })`| Prints a message to screen, use `asRaw` to show `var` names |
