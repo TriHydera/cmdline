@@ -9,10 +9,13 @@
 help | help | ✅ `Core`
 echo | echo [message] | ✅ `Core`
 clear | clear | ✅ `Core`
-mod | mod [add\|list\|deps] [module] | ✅ `Core`
+mod | mod [add|list|deps] [module] | ✅ `Core`
 set | set [key] [value] | ✅ `Core`
-uuid | uuid | `Core`
+uuid | uuid | ✅ `Core`
+base64 | base64 [text] | ✅ `Core`
 rand | rand [min] [max] | ✅ `Core`
+curl | curl [url] | ✅ `Core`
+ipaddress | ipaddress | ✅ `Core`
 print | print [file] | ⭐ `@cmd/printer`
 fact | fact [animal] | ⭐ `srapi`
 spin | spin | ⭐ `@cmd/spin`
@@ -56,6 +59,7 @@ function load() {} // run on import
 | `core.storage.setItem(key, value)`                                 | Sets global storage object                                    |
 | `core.storage.getItem(key)`                                        | Gets global storage object                                    |
 | `core.request.send(url)`                                           | Sends web request to the `url` to fetch `JSON` content      |
+| `core.request.getHosts()`                                           | Returns the allowed host list      |
 
 ### Vars
 

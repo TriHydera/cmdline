@@ -1,16 +1,17 @@
-// Version: 1.2
+ // Version: 1.2.1
 
 var meta = {
    name: "@cmd/core",
-   ver: "1.2",
+   ver: "1.2.1",
    deps: []
 }
 
 function load() {
    let { create } = cmd;
-   let { echo, help, clear } = core.action;
+   let { echo, help, clear, helpinfo } = core.action;
+   let { request } = core
    
-   vars.set("version", "1.2")
+   vars.set("version", "1.2.1")
    
    create({
       tag: "help",
@@ -109,6 +110,20 @@ function load() {
       }
    })
    
+   create({
+      tag: "base64",
+      help: "%tag% [text]",
+      category: "Core",
+      run: (args) => {
+         if(!args[0]) {
+            echo(helpinfo("base64"))
+         } else {
+         action.echo(`\n${utils.color("[ Base64 Converter ]", "lightgray")}
+         ${btoa(args[0])}`);
+         }
+      }
+   })
+   
    cmd.create({
     tag: "rand",
     aliases: ["ran"],
@@ -129,6 +144,34 @@ function load() {
       %bar%`)
     }
   })
+  
+     create({
+     tag: "curl",
+     help: "%tag% [url]",
+     category: "Core",
+     run: (args) => {
+       if(!args[0]) {
+         echo(helpinfo("curl"))
+       } else {
+         request.send(args[0], false, (resp) => {
+           echo(resp)
+         })
+       }
+     }
+   })
+   
+   create({
+     tag: "ipaddress",
+     aliases: ["ip"],    
+     help: "%tag%",
+     category: "Core",
+     run: (args) => {
+         request.send("https://api.ipify.org", false, (resp) => {
+           echo(`${utils.color("[ IP Address ]", "lightgray")}
+           ${resp}`)
+         })
+     }
+   })
 }
 
 function unload() {}

@@ -28,7 +28,7 @@ function load() {
          if (!config.animals.includes(args[0])) {
             echo(config.help);
          } else {
-            core.request.send(`${config.facts}/${args[0]}`,
+            core.request.send(`${config.facts}/${args[0]}`, true,
                (data) => {
                   echo(`${color(`\n[ Fact about ${args[0]}s ]`, "lightgray")}\n${color(data.fact, "lightblue")}`);
                }
